@@ -18,10 +18,16 @@ pipeline {
                     npm ci
                     npm run build
                     ls -la
-               '''
+                '''
             }
             
-            stage('test') {
+            stage('Test') {
+                agent {
+                    docker {
+                        image 'node:18-alphine'
+                        reuseNode true
+                    } 
+                }
                 steps {
                     sh '''
                     test -f build/index.html
