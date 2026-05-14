@@ -10,8 +10,8 @@ pipeline {
                     } 
                 }
             }
-            steps {
-               sh '''
+              steps {
+                  sh '''
                     ls -la
                     node --version
                     npm --version
@@ -43,12 +43,13 @@ pipeline {
                     }
                 }
             }
-            steps {
-                sh '''
+                steps {
+                    sh '''
                     curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
                     render --version
-                    render deploy learn-jenkins-app --api-key $RENDER_API_KEY'''
-            }
+                    render deploy learn-jenkins-app --api-key $RENDER_API_KEY
+                    '''
+                }
                           
         } 
     
