@@ -3,11 +3,12 @@ pipeline {
 
         stages {
             stage('Build') {
-             agent {
-                docker {
-                    image 'node:18-alphine'
-                    reuseNode true
-                } 
+              agent {
+                    docker {
+                        image 'node:18-alphine'
+                        reuseNode true
+                    } 
+                }
             }
             steps {
                sh '''
@@ -19,41 +20,41 @@ pipeline {
                  ls -la
                '''
             }
-        }
-        stage('test') {
-            steps {
-               sh '''
-               test -f build/index.html
-               npm test
-               '''
+            
+            stage('test') {
+                steps {
+                    sh '''
+                    test -f build/index.html
+                    npm test
+                    '''
+                }
             }
-        }
-        stage('Deploy to Render') {
-            agent {
-                docker {
-                    image 'node:18'
-                    reuseNode true
+            stage('Deploy to Render') {
+                agent {
+                    docker {
+                        image 'node:18'
+                        reuseNode true
+                    }
                 }
             }
             steps {
-/                    sh '''
+                    sh '''
                        curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
                        render --version
                     '''
-                }
-            }               
+            }
+                          
         } 
-    }
-    post {
-        always {
-            junit 'test-results/junit.xml'
+    
+        post {
+           always {
+              junit 'test-results/junit.xml'
+           }
+          sucess{
+                echo 'Pipeline completed -app deployed to Rendeer'
+           }
+           failure {
+                eccho 'Pipeline failed - deployed skipped.'
+            }
         }
-        sucess{
-        echo 'Pipeline completed -app deployed to Rendeer'
-        }
-        failure {
-            eccho 'Pipeline failed - deployed skipped.'
-        }}
-
-
 }
