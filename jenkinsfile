@@ -28,7 +28,33 @@ pipeline {
                '''
             }
         }
-        
-    
-}
+        stage('Deploy to Render') {
+            agent {
+                docker {
+                    image 'node:18'
+                    reuseNode true
+                }
+            }
+            steps {
+                withCredentials([string(credentialsId: 'RENDER_API_KEY', variable: 'Render_API_KEY')]) {
+                    sh '''
+                       curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
+                       render --version
+                    '''
+                }
+            }               
+        } 
+    }
+    post {
+        always {
+            junit 'test-results/junit.xml'
+        }
+        sucess{
+        echo 'Pipeline completed -app deployed to Rendeer'
+        }
+        failure {
+            eccho 'Pipeline failed - deployed skipped.'
+        }}
+
+
 }
