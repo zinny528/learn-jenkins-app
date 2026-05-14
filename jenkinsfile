@@ -12,12 +12,12 @@ pipeline {
             }
             steps {
                sh '''
-                ls -la
-                 node --version
-                 npm --version
-                 npm ci
-                 npm run build
-                 ls -la
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
                '''
             }
             
@@ -38,10 +38,10 @@ pipeline {
                 }
             }
             steps {
-                    sh '''
-                       curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
-                       render --version
-                    '''
+                sh '''
+                    curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
+                    render --version
+                    render deploy learn-jenkins-app --api-key $RENDER_API_KEY'''
             }
                           
         } 
@@ -50,11 +50,11 @@ pipeline {
            always {
               junit 'test-results/junit.xml'
            }
-          sucess{
+           success{
                 echo 'Pipeline completed -app deployed to Rendeer'
            }
            failure {
-                eccho 'Pipeline failed - deployed skipped.'
+                echo 'Pipeline failed - deployed skipped.'
             }
         }
 }
