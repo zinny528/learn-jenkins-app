@@ -3,15 +3,14 @@ pipeline {
 
         stages {
             stage('Build') {
-              agent {
+                agent {
                     docker {
-                        image 'node:18-alphine'
+                        image 'node:18-alpine'
                         reuseNode true
-                    } 
+                    }
                 }
-            }
-              steps {
-                  sh '''
+                steps {
+                    sh '''
                     ls -la
                     node --version
                     npm --version
@@ -19,14 +18,15 @@ pipeline {
                     npm run build
                     ls -la
                 '''
+                }
             }
             
             stage('Test') {
                 agent {
                     docker {
-                        image 'node:18-alphine'
+                        image 'node:18-alpine'
                         reuseNode true
-                    } 
+                    }
                 }
                 steps {
                     sh '''
@@ -42,7 +42,6 @@ pipeline {
                         reuseNode true
                     }
                 }
-            }
                 steps {
                     sh '''
                     curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
@@ -50,8 +49,9 @@ pipeline {
                     render deploy learn-jenkins-app --api-key $RENDER_API_KEY
                     '''
                 }
-                          
-        } 
+            }
+        }
+
     
         post {
            always {
